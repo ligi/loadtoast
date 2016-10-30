@@ -10,6 +10,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
@@ -88,9 +89,9 @@ public class LoadToastView extends ImageView {
 
         int padding = (TOAST_HEIGHT - IMAGE_WIDTH) / 2;
         iconBounds = new Rect(TOAST_HEIGHT + MAX_TEXT_WIDTH - padding, padding, TOAST_HEIGHT + MAX_TEXT_WIDTH - padding + IMAGE_WIDTH, IMAGE_WIDTH + padding);
-        completeicon = getResources().getDrawable(R.drawable.ic_navigation_check);
+        completeicon = ContextCompat.getDrawable(getContext(), R.drawable.ic_navigation_check);
         completeicon.setBounds(iconBounds);
-        failedicon = getResources().getDrawable(R.drawable.ic_error);
+        failedicon = ContextCompat.getDrawable(getContext(), R.drawable.ic_alert_warning);
         failedicon.setBounds(iconBounds);
 
         va = ValueAnimator.ofFloat(0, 1);

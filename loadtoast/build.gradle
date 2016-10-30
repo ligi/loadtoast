@@ -15,6 +15,7 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -33,4 +34,6 @@ apply from: 'https://raw.githubusercontent.com/ArthurHub/release-android-library
 
 dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
+
+    compile "com.android.support:appcompat-v7:25.0.0"
 }
