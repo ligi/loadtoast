@@ -116,30 +116,42 @@ public class LoadToastView extends ImageView {
         calculateBounds();
     }
 
+    private boolean isRunningTest() {
+        try {
+            Class.forName("android.support.test.espresso.Espresso");
+            return true;
+        } catch (ClassNotFoundException e) {
+        /* no-op */
+        }
+        return false;
+    }
+
     private void initSpinner() {
-        spinnerDrawable = new MaterialProgressDrawable(getContext(), this);
+        if (!isRunningTest()) {
+            spinnerDrawable = new MaterialProgressDrawable(getContext(), this);
 
-        spinnerDrawable.setStartEndTrim(0, .5f);
-        spinnerDrawable.setProgressRotation(.5f);
+            spinnerDrawable.setStartEndTrim(0, .5f);
+            spinnerDrawable.setProgressRotation(.5f);
 
-        int mDiameter = TOAST_HEIGHT;
-        int mProgressStokeWidth = LINE_WIDTH;
-        spinnerDrawable.setSizeParameters(mDiameter,
-                                          mDiameter,
-                                          (mDiameter - mProgressStokeWidth * 2) / 4,
-                                          mProgressStokeWidth,
-                                          mProgressStokeWidth * 4,
-                                          mProgressStokeWidth * 2);
+            int mDiameter = TOAST_HEIGHT;
+            int mProgressStokeWidth = LINE_WIDTH;
+            spinnerDrawable.setSizeParameters(mDiameter,
+                                              mDiameter,
+                                              (mDiameter - mProgressStokeWidth * 2) / 4,
+                                              mProgressStokeWidth,
+                                              mProgressStokeWidth * 4,
+                                              mProgressStokeWidth * 2);
 
-        spinnerDrawable.setBackgroundColor(Color.TRANSPARENT);
-        spinnerDrawable.setColorSchemeColors(loaderPaint.getColor());
-        spinnerDrawable.setVisible(true, false);
-        spinnerDrawable.setAlpha(255);
+            spinnerDrawable.setBackgroundColor(Color.TRANSPARENT);
+            spinnerDrawable.setColorSchemeColors(loaderPaint.getColor());
+            spinnerDrawable.setVisible(true, false);
+            spinnerDrawable.setAlpha(255);
 
-        setImageDrawable(null);
-        setImageDrawable(spinnerDrawable);
+            setImageDrawable(null);
+            setImageDrawable(spinnerDrawable);
 
-        spinnerDrawable.start();
+            spinnerDrawable.start();
+        }
     }
 
     public void setTextColor(int color) {
@@ -153,7 +165,7 @@ public class LoadToastView extends ImageView {
 
     public void setProgressColor(int color) {
         loaderPaint.setColor(color);
-        spinnerDrawable.setColorSchemeColors(color);
+        if (spinnerDrawable != null) spinnerDrawable.setColorSchemeColors(color);
     }
 
     public void show() {
