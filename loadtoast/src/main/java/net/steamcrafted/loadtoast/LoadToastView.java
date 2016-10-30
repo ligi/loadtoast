@@ -11,7 +11,6 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.TypedValue;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
@@ -56,7 +55,6 @@ public class LoadToastView extends ImageView {
     private boolean outOfBounds = false;
 
     private Path toastPath = new Path();
-    private AccelerateDecelerateInterpolator easeinterpol = new AccelerateDecelerateInterpolator();
     private MaterialProgressDrawable spinnerDrawable;
 
     public LoadToastView(Context context) {
@@ -90,8 +88,6 @@ public class LoadToastView extends ImageView {
 
         int padding = (TOAST_HEIGHT - IMAGE_WIDTH) / 2;
         iconBounds = new Rect(TOAST_HEIGHT + MAX_TEXT_WIDTH - padding, padding, TOAST_HEIGHT + MAX_TEXT_WIDTH - padding + IMAGE_WIDTH, IMAGE_WIDTH + padding);
-        //loadicon = getResources().getDrawable(R.mipmap.ic_launcher);
-        //loadicon.setBounds(iconBounds);
         completeicon = getResources().getDrawable(R.drawable.ic_navigation_check);
         completeicon.setBounds(iconBounds);
         failedicon = getResources().getDrawable(R.drawable.ic_error);
@@ -102,7 +98,6 @@ public class LoadToastView extends ImageView {
         va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                //WIDTH_SCALE = valueAnimator.getAnimatedFraction();
                 postInvalidate();
             }
         });
@@ -190,7 +185,6 @@ public class LoadToastView extends ImageView {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 WIDTH_SCALE = 2f * (valueAnimator.getAnimatedFraction());
-                //Log.d("lt", "ws " + WIDTH_SCALE);
                 postInvalidate();
             }
         });
@@ -231,19 +225,11 @@ public class LoadToastView extends ImageView {
             int textSize = BASE_TEXT_SIZE;
             while (textSize > dpToPx(13) && mTextBounds.width() > MAX_TEXT_WIDTH) {
                 textSize--;
-                //Log.d("bounds", "width " + mTextBounds.width() + " max " + MAX_TEXT_WIDTH);
                 textPaint.setTextSize(textSize);
                 textPaint.getTextBounds(mText, 0, mText.length(), mTextBounds);
             }
             if (mTextBounds.width() > MAX_TEXT_WIDTH) {
                 outOfBounds = true;
-                /**
-                 float keep = (float)MAX_TEXT_WIDTH / (float)mTextBounds.width();
-                 int charcount = (int)(mText.length() * keep);
-                 //Log.d("calc", "keep " + charcount + " per " + keep + " len " + mText.length());
-                 mText = mText.substring(0, charcount);
-                 textPaint.getTextBounds(mText, 0, mText.length(), mTextBounds);
-                 **/
             }
         }
     }
@@ -292,18 +278,6 @@ public class LoadToastView extends ImageView {
 
         c.drawPath(toastPath, backPaint);
         toastPath.reset();
-
-        float prog = va.getAnimatedFraction() * 6.0f;
-        float progrot = prog % 2.0f;
-        float proglength = easeinterpol.getInterpolation(prog % 3f / 3f) * 3f - .75f;
-        if (proglength > .75f) {
-            proglength = .75f - (prog % 3f - 1.5f);
-            progrot += (prog % 3f - 1.5f) / 1.5f * 2f;
-        }
-
-        if (mText.length() == 0) {
-            ws = Math.max(1f - WIDTH_SCALE, 0f);
-        }
 
         c.save();
 
@@ -394,22 +368,21 @@ public class LoadToastView extends ImageView {
      * @return The height of the view, honoring constraints from measureSpec
      */
     private int measureHeight(int measureSpec) {
-        int result = 0;
         int specMode = MeasureSpec.getMode(measureSpec);
         int specSize = MeasureSpec.getSize(measureSpec);
 
         if (specMode == MeasureSpec.EXACTLY) {
             // We were told how big to be
-            result = specSize;
+            return specSize;
         } else {
             // Measure the text (beware: ascent is a negative number)
-            result = TOAST_HEIGHT;
             if (specMode == MeasureSpec.AT_MOST) {
                 // Respect AT_MOST value if that was what is called for by measureSpec
-                result = Math.min(result, specSize);
+                return Math.min(TOAST_HEIGHT, specSize);
             }
+
+            return TOAST_HEIGHT;
         }
-        return result;
     }
 
     @Override
