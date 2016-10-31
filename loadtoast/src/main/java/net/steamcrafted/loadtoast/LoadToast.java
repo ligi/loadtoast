@@ -14,7 +14,6 @@ import com.nineoldandroids.view.ViewPropertyAnimator;
  */
 public class LoadToast {
 
-    private String mText = "";
     private LoadToastView mView;
     private ViewGroup mParentView;
     private int mTranslationY = 0;
@@ -53,8 +52,7 @@ public class LoadToast {
     }
 
     public LoadToast setText(String message) {
-        mText = message;
-        mView.setText(mText);
+        mView.setText(message);
         return this;
     }
 
