@@ -24,26 +24,29 @@ public class LoadToast {
 
 
     public LoadToast(Context context) {
-        mView = new LoadToastView(context);
-        mParentView = (ViewGroup) ((Activity) context).getWindow().getDecorView().findViewById(android.R.id.content);
-        mParentView.addView(mView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        ViewHelper.setAlpha(mView, 0);
-        mParentView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ViewHelper.setTranslationX(mView, (mParentView.getWidth() - mView.getWidth()) / 2);
-                ViewHelper.setTranslationY(mView, -mView.getHeight() + mTranslationY);
-                mInflated = true;
-                if (!mToastCanceled && mShowCalled) show();
-            }
-        }, 1);
+        if (!LoadToastView.isRunningTest()) {
+            mView = new LoadToastView(context);
 
-        mParentView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                checkZPosition();
-            }
-        });
+            mParentView = (ViewGroup) ((Activity) context).getWindow().getDecorView().findViewById(android.R.id.content);
+            mParentView.addView(mView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            ViewHelper.setAlpha(mView, 0);
+            mParentView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ViewHelper.setTranslationX(mView, (mParentView.getWidth() - mView.getWidth()) / 2);
+                    ViewHelper.setTranslationY(mView, -mView.getHeight() + mTranslationY);
+                    mInflated = true;
+                    if (!mToastCanceled && mShowCalled) show();
+                }
+            }, 1);
+
+            mParentView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    checkZPosition();
+                }
+            });
+        }
     }
 
     public LoadToast setTranslationY(int pixels) {
