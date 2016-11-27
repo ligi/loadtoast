@@ -72,7 +72,7 @@ public class LoadToast {
     }
 
     public LoadToast show() {
-        if (!mInflated) {
+        if (!mInflated | LoadToastView.isRunningTest()) {
             mShowCalled = true;
             return this;
         }
