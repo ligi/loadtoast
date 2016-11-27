@@ -112,7 +112,7 @@ public class LoadToastView extends ImageView {
         calculateBounds();
     }
 
-    private boolean isRunningTest() {
+    public static boolean isRunningTest() {
         try {
             Class.forName("android.support.test.espresso.Espresso");
             return true;

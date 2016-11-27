@@ -84,7 +84,7 @@ public class LoadToast {
 
         ViewPropertyAnimator.animate(mView).alpha(1f).translationY(25 + mTranslationY)
                 .setInterpolator(new DecelerateInterpolator())
-                .setDuration(300).setStartDelay(0).start();
+                .setDuration(LoadToastView.isRunningTest()?0:300).setStartDelay(0).start();
 
         mVisible = true;
         checkZPosition();
